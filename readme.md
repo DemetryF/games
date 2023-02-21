@@ -12,4 +12,4 @@ https://github.com/RadeonGalwet/planets
 https://github.com/timar07/Celestial
 
 And my old repository:
-https://github.com/DemetryF/Celestial
+https://github.com/DemetryCPP/Celestial
