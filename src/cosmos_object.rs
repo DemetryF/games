@@ -45,8 +45,7 @@ impl CosmosObject {
         window.draw_circle_shape(circle, &RenderStates::default());
 
         if let Some(name) = self.name.as_ref() {
-            let font =
-                Font::from_file("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf").unwrap();
+            let font = Font::from_file("./assets/Segoe UI.ttf").unwrap();
 
             let mut text = Text::new(name, &font, 10);
 
