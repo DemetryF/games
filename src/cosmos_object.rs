@@ -55,6 +55,22 @@ impl CosmosObject {
         };
     }
 
+    pub fn send_into_orbit_to(mut self, other: &Self, orbit_radius: f32, degree: f32) -> Self {
+        let sin = degree.sin();
+        let cos = degree.cos();
+
+        let speed = (other.m / orbit_radius).sqrt();
+
+        let u = Vec2::new(cos, sin);
+
+        u.perpendicular();
+
+        self.pos = other.pos + u * orbit_radius;
+        self.v = u.perpendicular() * speed;
+
+        return self;
+    }
+
     pub fn set_name(mut self, new_name: String) -> Self {
         self.name = Some(new_name);
         return self;

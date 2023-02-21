@@ -8,39 +8,34 @@ mod game;
 const SUN_MASS: f32 = 6e6;
 
 fn main() {
-    let mut counter = 0;
-
-    let mut planet = |mass: f32, mut dist: f32, name: &str| -> CosmosObject {
-        let degree = 0.5 * PI * counter as f32;
-        counter += 1;
-
-        dist /= 2.0;
-
-        let sin = degree.sin();
-        let cos = degree.cos();
-
-        let v = (SUN_MASS / dist).sqrt();
-
-        let pos = Vec2::new(dist * cos, dist * sin);
-        let speed = Vec2::new(v * -sin, v * cos);
-
-        CosmosObject::new(mass, 1.0, pos)
-            .set_name(name.to_string())
-            .set_velocity(speed)
-    };
-
     let sun = CosmosObject::new(SUN_MASS, 8.0, Vec2::new(0.0, 0.0)).set_name("Sun".into());
 
     let planets: Vec<CosmosObject> = vec![
+        CosmosObject::new(1.0, 2.0, Vec2::default())
+            .set_name("Mercury".into())
+            .send_into_orbit_to(&sun, 10.0, 1.0 * PI * 0.5),
+        CosmosObject::new(14.0, 2.0, Vec2::default())
+            .set_name("Venus".into())
+            .send_into_orbit_to(&sun, 18.6, 2.0 * PI * 0.5),
+        CosmosObject::new(18.0, 2.0, Vec2::default())
+            .set_name("Earth".into())
+            .send_into_orbit_to(&sun, 25.6, 3.0 * PI * 0.5),
+        CosmosObject::new(2.0, 2.0, Vec2::default())
+            .set_name("Mars".into())
+            .send_into_orbit_to(&sun, 39.3, 4.0 * PI * 0.5),
+        CosmosObject::new(6329.0, 2.0, Vec2::default())
+            .set_name("Jupiter".into())
+            .send_into_orbit_to(&sun, 134.1, 5.0 * PI * 0.5),
+        CosmosObject::new(1894.0, 2.0, Vec2::default())
+            .set_name("Saturn".into())
+            .send_into_orbit_to(&sun, 246.5, 6.0 * PI * 0.5),
+        CosmosObject::new(289.0, 2.0, Vec2::default())
+            .set_name("Uranus".into())
+            .send_into_orbit_to(&sun, 482.7, 7.0 * PI * 0.5),
+        CosmosObject::new(341.0, 2.0, Vec2::default())
+            .set_name("Neptune".into())
+            .send_into_orbit_to(&sun, 770.0, 8.0 * PI * 0.5),
         sun,
-        planet(1.0, 10.0, "Mercury"),
-        planet(14.0, 18.6, "Venus"),
-        planet(18.0, 25.6, "Earth"),
-        planet(2.0, 39.3, "Mars"),
-        planet(6329.0, 134.1, "Jupiter"),
-        planet(1894.0, 246.5, "Saturn"),
-        planet(289.0, 482.7, "Uranus"),
-        planet(341.0, 770.0, "Neptune"),
     ];
 
     let mut game = Game::new(planets);
