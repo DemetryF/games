@@ -74,17 +74,17 @@ impl Game {
 
     fn process_planets(&mut self) {
         for i in 0..self.objects.len() {
-            let (left, [planet, right @ ..]) = self.objects.split_at_mut(i) else {
+            let (_, [current, right @ ..]) = self.objects.split_at_mut(i) else {
                 continue;
             };
 
-            planet.render(&self.window);
+            current.render(&self.window);
 
-            for second in left.iter().chain(&*right) {
-                planet.influence(second, self.dt)
+            for other in right {
+                CosmosObject::interact(current, other, self.dt);
             }
 
-            planet.pos += planet.v * self.dt;
+            current.position += current.velocity * self.dt;
         }
     }
 }
