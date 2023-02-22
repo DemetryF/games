@@ -6,6 +6,7 @@ pub type Vec2 = sfml::system::Vector2f;
 
 const POINT_COUNT: usize = 32;
 
+#[derive(Default)]
 pub struct CosmosObject {
     pub mass: f32,
     pub radius: f32,
@@ -17,16 +18,6 @@ pub struct CosmosObject {
 }
 
 impl CosmosObject {
-    pub fn new(m: f32, r: f32, pos: Vec2) -> Self {
-        Self {
-            mass: m,
-            radius: r,
-            position: pos,
-            velocity: Vec2::default(),
-            name: None,
-        }
-    }
-
     pub fn render(&self, window: &RenderWindow) {
         let circle = &mut CircleShape::new(self.radius, POINT_COUNT);
 
@@ -45,7 +36,7 @@ impl CosmosObject {
         };
     }
 
-    pub fn send_into_orbit_to(mut self, other: &Self, orbit_radius: f32, degree: f32) -> Self {
+    pub fn orbit(mut self, other: &Self, orbit_radius: f32, degree: f32) -> Self {
         let (sin, cos) = degree.sin_cos();
 
         let speed = (other.mass / orbit_radius).sqrt();
@@ -55,16 +46,6 @@ impl CosmosObject {
         self.position = other.position + u * orbit_radius;
         self.velocity = u.perpendicular() * speed;
 
-        return self;
-    }
-
-    pub fn set_name(mut self, new_name: String) -> Self {
-        self.name = Some(new_name);
-        return self;
-    }
-
-    pub fn set_velocity(mut self, v: Vec2) -> Self {
-        self.velocity = v;
-        return self;
+        self
     }
 }

@@ -15,7 +15,7 @@ const FIELD_SIZE: f32 = 1000.0;
 const BITS_PER_PIXER: u32 = 24;
 const TITLE: &str = "demetry's celestial";
 
-pub struct Game {
+pub struct Celestial {
     objects: Vec<CosmosObject>,
     window: RenderWindow,
 
@@ -23,7 +23,7 @@ pub struct Game {
     time_coef: f32,
 }
 
-impl Game {
+impl Celestial {
     pub fn new(objects: Vec<CosmosObject>) -> Self {
         let video_mode = VideoMode::new(FIELD_SIZE as u32, FIELD_SIZE as u32, BITS_PER_PIXER);
 
@@ -51,7 +51,7 @@ impl Game {
         }
     }
 
-    pub fn update(&mut self) {
+    fn update(&mut self) {
         let time = Instant::now();
         self.window.clear(Color::BLACK);
 
