@@ -5,7 +5,11 @@ use sfml::{
     window::{ContextSettings, Event, Key, Style, VideoMode},
 };
 
-use crate::{cosmos_object::Vec2, CosmosObject};
+use crate::{
+    cosmos_object::Vec2,
+    interact::{Collision, Gravity, Interact},
+    CosmosObject,
+};
 
 const FIELD_SIZE: f32 = 1000.0;
 const BITS_PER_PIXER: u32 = 24;
@@ -81,7 +85,8 @@ impl Game {
             current.render(&self.window);
 
             for other in right {
-                CosmosObject::interact(current, other, self.dt);
+                Collision::interact(current, other, self.dt);
+                Gravity::interact(current, other, self.dt)
             }
 
             current.position += current.velocity * self.dt;

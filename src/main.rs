@@ -4,6 +4,7 @@ use self::{cosmos_object::*, game::Game};
 
 mod cosmos_object;
 mod game;
+mod interact;
 
 const SUN_MASS: f32 = 6e6;
 
