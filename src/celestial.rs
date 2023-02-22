@@ -14,6 +14,7 @@ use crate::{
 const FIELD_SIZE: f32 = 1000.0;
 const BITS_PER_PIXER: u32 = 24;
 const TITLE: &str = "demetry's celestial";
+const SCROLL_COEF: f32 = 1.7;
 
 pub struct Celestial {
     objects: Vec<CosmosObject>,
@@ -70,6 +71,12 @@ impl Celestial {
                     if code == Key::Escape {
                         self.window.close();
                     }
+                }
+                Event::MouseWheelScrolled { delta, .. } => {
+                    let mut view = self.window.view().to_owned();
+                    let size = view.size();
+                    view.set_size(size * SCROLL_COEF.powf(-delta));
+                    self.window.set_view(&view);
                 }
                 _ => {}
             }
