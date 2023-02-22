@@ -7,7 +7,7 @@ use sfml::{
 
 use crate::{cosmos_object::Vec2, CosmosObject};
 
-const FIELD_SIZE: u32 = 1000;
+const FIELD_SIZE: f32 = 1000.0;
 const BITS_PER_PIXER: u32 = 24;
 const TITLE: &str = "demetry's celestial";
 
@@ -21,7 +21,7 @@ pub struct Game {
 
 impl Game {
     pub fn new(objects: Vec<CosmosObject>) -> Self {
-        let video_mode = VideoMode::new(FIELD_SIZE, FIELD_SIZE, BITS_PER_PIXER);
+        let video_mode = VideoMode::new(FIELD_SIZE as u32, FIELD_SIZE as u32, BITS_PER_PIXER);
 
         let mut window = RenderWindow::new(
             video_mode,
@@ -30,18 +30,14 @@ impl Game {
             &ContextSettings::default(),
         );
 
-        let view = View::new(
-            Vec2::default(),
-            Vec2::new(FIELD_SIZE as f32, FIELD_SIZE as f32),
-        );
-
+        let view = View::new(Vec2::default(), Vec2::new(FIELD_SIZE, FIELD_SIZE));
         window.set_view(&view);
 
         Self {
             objects,
             window,
             dt: 0.0,
-            time_coef: 10.0,
+            time_coef: 0.01,
         }
     }
 
@@ -57,10 +53,9 @@ impl Game {
 
         self.handle_events();
         self.process_planets();
-        self.render();
 
         self.window.display();
-        self.dt = time.elapsed().as_secs_f32() / self.time_coef;
+        self.dt = time.elapsed().as_secs_f32() * self.time_coef;
     }
 
     fn handle_events(&mut self) {
@@ -92,6 +87,4 @@ impl Game {
             planet.pos += planet.v * self.dt;
         }
     }
-
-    fn render(&self) {}
 }
