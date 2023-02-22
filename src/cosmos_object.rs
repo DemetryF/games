@@ -31,15 +31,30 @@ impl CosmosObject {
         let rect = a.position - b.position;
         let dist = rect.length_sq().sqrt();
 
-        let direction = rect / dist;
+        // collision
+        if dist < a.radius + b.radius {
+            let new_a_velocity =
+                (b.velocity * b.mass * 2.0 + a.velocity * (a.mass - b.mass)) / (a.mass + b.mass);
 
-        let force = a.mass * b.mass / dist.powi(2);
+            let new_b_velocity =
+                (a.velocity * a.mass * 2.0 + b.velocity * (b.mass - a.mass)) / (b.mass + a.mass);
 
-        let a_acceleration = force / a.mass;
-        let b_acceleration = force / b.mass;
+            a.velocity = new_a_velocity;
+            b.velocity = new_b_velocity;
+        }
 
-        a.velocity += direction * a_acceleration * dt;
-        b.velocity += -direction * b_acceleration * dt;
+        // gravity
+        {
+            let direction = rect / dist;
+
+            let force = a.mass * b.mass / dist.powi(2);
+
+            let a_acceleration = force / a.mass;
+            let b_acceleration = force / b.mass;
+
+            a.velocity += -direction * a_acceleration * dt;
+            b.velocity += direction * b_acceleration * dt;
+        }
     }
 
     pub fn render(&self, window: &RenderWindow) {
