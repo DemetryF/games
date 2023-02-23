@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use sfml::{
     graphics::{Color, RenderTarget, RenderWindow, View},
-    window::{ContextSettings, Event, Key, Style, VideoMode},
+    window::{mouse::Button, ContextSettings, Event, Key, Style, VideoMode},
 };
 
 use crate::{
@@ -22,6 +22,9 @@ pub struct Celestial {
 
     dt: f32,
     time_coef: f32,
+
+    scroll: f32,
+    moving: Option<Vec2>,
 }
 
 impl Celestial {
@@ -43,6 +46,8 @@ impl Celestial {
             window,
             dt: 0.0,
             time_coef: 0.01,
+            moving: None,
+            scroll: 1.0,
         }
     }
 
@@ -75,8 +80,34 @@ impl Celestial {
                 Event::MouseWheelScrolled { delta, .. } => {
                     let mut view = self.window.view().to_owned();
                     let size = view.size();
-                    view.set_size(size * SCROLL_COEF.powf(-delta));
+                    let delta = SCROLL_COEF.powf(-delta);
+                    self.scroll *= delta;
+                    view.set_size(size * delta);
                     self.window.set_view(&view);
+                }
+                Event::MouseButtonPressed { button, x, y } => {
+                    if button == Button::Left {
+                        self.moving = Some(
+                            self.window.view().center()
+                                + Vec2::new(x as f32, y as f32) * self.scroll
+                                - Vec2::new(FIELD_SIZE, FIELD_SIZE),
+                        );
+                    }
+                }
+                Event::MouseButtonReleased { button, .. } => {
+                    if button == Button::Left {
+                        self.moving = None;
+                    }
+                }
+                Event::MouseMoved { x, y } => {
+                    if let Some(coords) = self.moving {
+                        let mut view = self.window.view().to_owned();
+                        view.set_center(
+                            coords - Vec2::new(x as f32, y as f32) * self.scroll
+                                + Vec2::new(FIELD_SIZE, FIELD_SIZE),
+                        );
+                        self.window.set_view(&view);
+                    }
                 }
                 _ => {}
             }
