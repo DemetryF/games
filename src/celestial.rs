@@ -3,6 +3,7 @@ use std::time::Instant;
 use sfml::{
     graphics::{Color, RenderTarget, RenderWindow, View},
     window::{mouse::Button, ContextSettings, Event, Key, Style, VideoMode},
+    SfBox,
 };
 
 use crate::{
@@ -25,6 +26,8 @@ pub struct Celestial {
 
     scroll: f32,
     moving: Option<Vec2>,
+
+    view: SfBox<View>,
 }
 
 impl Celestial {
@@ -48,6 +51,7 @@ impl Celestial {
             time_coef: 0.01,
             moving: None,
             scroll: 1.0,
+            view,
         }
     }
 
@@ -78,12 +82,8 @@ impl Celestial {
                     }
                 }
                 Event::MouseWheelScrolled { delta, .. } => {
-                    let mut view = self.window.view().to_owned();
-                    let size = view.size();
-                    let delta = SCROLL_COEF.powf(-delta);
-                    self.scroll *= delta;
-                    view.set_size(size * delta);
-                    self.window.set_view(&view);
+                    self.view.zoom(SCROLL_COEF.powf(-delta));
+                    self.window.set_view(&self.view);
                 }
                 Event::MouseButtonPressed { button, x, y } => {
                     if button == Button::Left {
@@ -101,12 +101,11 @@ impl Celestial {
                 }
                 Event::MouseMoved { x, y } => {
                     if let Some(coords) = self.moving {
-                        let mut view = self.window.view().to_owned();
-                        view.set_center(
+                        self.view.set_center(
                             coords - Vec2::new(x as f32, y as f32) * self.scroll
                                 + Vec2::new(FIELD_SIZE, FIELD_SIZE),
                         );
-                        self.window.set_view(&view);
+                        self.window.set_view(&self.view);
                     }
                 }
                 _ => {}
