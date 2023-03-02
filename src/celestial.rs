@@ -82,15 +82,15 @@ impl Celestial {
                     }
                 }
                 Event::MouseWheelScrolled { delta, .. } => {
-                    self.view.zoom(SCROLL_COEF.powf(-delta));
+                    self.scroll = SCROLL_COEF.powf(-delta);
+                    self.view.zoom(self.scroll);
                     self.window.set_view(&self.view);
                 }
                 Event::MouseButtonPressed { button, x, y } => {
                     if button == Button::Left {
                         self.moving = Some(
                             self.window.view().center()
-                                + Vec2::new(x as f32, y as f32) * self.scroll
-                                - Vec2::new(FIELD_SIZE, FIELD_SIZE),
+                                + Vec2::new(x as f32, y as f32) * self.scroll,
                         );
                     }
                 }
@@ -101,10 +101,8 @@ impl Celestial {
                 }
                 Event::MouseMoved { x, y } => {
                     if let Some(coords) = self.moving {
-                        self.view.set_center(
-                            coords - Vec2::new(x as f32, y as f32) * self.scroll
-                                + Vec2::new(FIELD_SIZE, FIELD_SIZE),
-                        );
+                        self.view
+                            .set_center(coords - Vec2::new(x as f32, y as f32) * self.scroll);
                         self.window.set_view(&self.view);
                     }
                 }
@@ -123,7 +121,7 @@ impl Celestial {
 
             for other in right {
                 Collision::interact(current, other, self.dt);
-                Gravity::interact(current, other, self.dt)
+                Gravity::interact(current, other, self.dt);
             }
 
             current.position += current.velocity * self.dt;
