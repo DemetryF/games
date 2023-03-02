@@ -1,16 +1,19 @@
 use std::time::Instant;
 
 use sfml::{
-    graphics::{Color, RenderTarget, RenderWindow, View},
+    graphics::{glsl::Vec2, Color, RenderTarget, RenderWindow, View},
     window::{mouse::Button, ContextSettings, Event, Key, Style, VideoMode},
     SfBox,
 };
 
 use crate::{
-    cosmos_object::Vec2,
+    cosmos_object::CosmosObject,
     interact::{Collision, Gravity, Interact},
-    CosmosObject,
 };
+
+mod cosmos_object;
+mod interact;
+pub mod sun_system;
 
 const FIELD_SIZE: f32 = 1000.0;
 const BITS_PER_PIXER: u32 = 24;

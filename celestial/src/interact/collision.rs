@@ -1,4 +1,6 @@
-use crate::cosmos_object::{CosmosObject, Vec2};
+use sfml::graphics::glsl::Vec2;
+
+use crate::CosmosObject;
 
 use super::Interact;
 

@@ -1,8 +1,6 @@
 use sfml::graphics::{
-    CircleShape, Font, RenderStates, RenderTarget, RenderWindow, Text, Transformable,
+    glsl::Vec2, CircleShape, Font, RenderStates, RenderTarget, RenderWindow, Text, Transformable,
 };
-
-pub type Vec2 = sfml::system::Vector2f;
 
 const POINT_COUNT: usize = 32;
 

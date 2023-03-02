@@ -1,12 +1,8 @@
 use std::f32::consts::FRAC_PI_2;
 
-use self::{celestial::Celestial, cosmos_object::*};
+use crate::cosmos_object::CosmosObject;
 
-mod celestial;
-mod cosmos_object;
-mod interact;
-
-fn main() {
+pub fn sun_system() -> Vec<CosmosObject> {
     let sun = CosmosObject {
         mass: 6e6,
         radius: 8.0,
@@ -14,7 +10,7 @@ fn main() {
         ..CosmosObject::default()
     };
 
-    let planets = vec![
+    vec![
         CosmosObject {
             mass: 1.0,
             radius: 1.0,
@@ -72,9 +68,5 @@ fn main() {
         }
         .orbit(&sun, 482.7, 8. * FRAC_PI_2),
         sun,
-    ];
-
-    let mut game = Celestial::new(planets);
-
-    game.start();
+    ]
 }
