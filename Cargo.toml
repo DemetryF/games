@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "celestial",
+    "snake",
     "bin",
-    "celestial"
 ]
